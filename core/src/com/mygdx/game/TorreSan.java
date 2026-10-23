@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 /* Clase principal del juego, anteriormente GameLluvia
@@ -31,10 +30,14 @@ public class TorreSan extends ApplicationAdapter {
 		font = new BitmapFont();
 		 
 		Sound sonidoHerido = Gdx.audio.newSound(Gdx.files.internal("hurt.ogg"));
-		jugador = new Jugador(new Texture(Gdx.files.internal("bucket.png")), sonidoHerido);
+		jugador = new Jugador(new Texture(Gdx.files.internal("jugador.png")), sonidoHerido);
           
 	    Sound sonidoPiso = Gdx.audio.newSound(Gdx.files.internal("drop.wav"));
-	    plataformas = new Plataformas(new Texture(Gdx.files.internal("plataforma.png")), sonidoPiso);
+	    plataformas = new Plataformas(
+	    		new Texture(Gdx.files.internal("plataforma.png")),
+	    		new Texture(Gdx.files.internal("plataforma_quebradiza.png")),
+	    		new Texture(Gdx.files.internal("plataforma_movil.png")),
+	    		sonidoPiso);
          
 	    musica = Gdx.audio.newMusic(Gdx.files.internal("rain.mp3"));
 	    musica.setLooping(true);
@@ -51,8 +54,8 @@ public class TorreSan extends ApplicationAdapter {
 	private void reiniciar() {
 		camera.position.y = ALTO / 2f;
 		plataformas.crear();
-		Rectangle inicio = plataformas.getPlataformaInicial();
-		jugador.reiniciar(inicio.x + inicio.width / 2 - Jugador.TAMANO / 2f, inicio.y + inicio.height);
+		jugador.reiniciar();
+		plataformas.colocarJugadorAlInicio(jugador);
 	}
 
 	@Override
@@ -93,7 +96,9 @@ public class TorreSan extends ApplicationAdapter {
 		boolean derecha = Gdx.input.isKeyPressed(Input.Keys.RIGHT);
 		boolean saltar = Gdx.input.isKeyPressed(Input.Keys.SPACE) || Gdx.input.isKeyPressed(Input.Keys.UP);
 		
-		jugador.actualizar(delta,  izquierda, derecha, saltar);
+		//Primero se mueven las plataformas y luego el jugador
+		plataformas.actualizarPlataformas(delta, jugador);
+		jugador.actualizar(delta, izquierda, derecha, saltar);
 		plataformas.revisarAterrizaje(jugador);
 		
 		//La camara sube cuando el jugador pasa la mitad de la pantalla
@@ -103,14 +108,13 @@ public class TorreSan extends ApplicationAdapter {
 		}
 		
 		float bordeInferior = camera.position.y - ALTO / 2f;
-		plataformas.actualizar(bordeInferior, bordeInferior + ALTO);
+		plataformas.generarYLimpiar(bordeInferior, bordeInferior + ALTO);
 		
 		//cayó por debajo de la pantalla: pierde una vida y reaparece en una plataforma visible
 		if (jugador.getY() + Jugador.TAMANO < bordeInferior) {
 			jugador.perderVida();
 			if (jugador.estaVivo()) {
-				Rectangle p = plataformas.buscarPlataformaParaReaparecer(bordeInferior);
-				jugador.reubicar(p.x + p.width / 2 - Jugador.TAMANO / 2f, p.y + p.height);
+				plataformas.reubicarJugador(jugador, bordeInferior);
 			}
 		}
 	}

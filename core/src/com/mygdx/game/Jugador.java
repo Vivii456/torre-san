@@ -36,12 +36,11 @@ public class Jugador {
 		this.sonidoHerido = sonidoHerido;
 	}
 	
-	public void reiniciar(float x, float y) {
+	public void reiniciar() {
 		vidas = VIDAS_INICIALES;
 		puntos = 0;
 		pisoMaximo = 0;
 		tiempoInvulnerable = 0;
-		reubicar(x, y);
 	}
 	
 	public void reubicar(float x, float y) {
@@ -59,10 +58,8 @@ public class Jugador {
 		}
 		
 		//movimiento horizontal
-		if (izquierda) area.x -= VELOCIDAD_X * delta;
-		if (derecha) area.x += VELOCIDAD_X * delta;
-		if (area.x < 0) area.x = 0;
-		if (area.x > TorreSan.ANCHO - TAMANO) area.x = TorreSan.ANCHO - TAMANO;
+		if (izquierda) moverHorizontal(-VELOCIDAD_X * delta);
+		if (derecha) moverHorizontal(VELOCIDAD_X * delta);
 		
 		//salto: siempre de la misma altura y solo si está parado en una plataforma
 		if (saltar && enSuelo) {
@@ -75,6 +72,12 @@ public class Jugador {
 		
 		//se asume que está en el aire y si cae en una plataforma, Plataformas llamará a aterrizar()
 		enSuelo = false;
+	}
+
+	public void moverHorizontal(float dx) {
+		area.x += dx;
+		if (area.x < 0) area.x = 0;
+		if (area.x > TorreSan.ANCHO - TAMANO) area.x = TorreSan.ANCHO - TAMANO;
 	}
 	
 	public void aterrizar(float ySuperficie) {
@@ -104,7 +107,7 @@ public class Jugador {
 		//parpadea un momento al perder una vida
 		boolean oculto = tiempoInvulnerable > 0 && ((int) (tiempoInvulnerable * 10)) % 2 == 0;
 		if (!oculto) {
-			batch.draw(imagen, area.x, area.y);
+			batch.draw(imagen, area.x, area.y, TAMANO, TAMANO);
 		}
 	}
 	
