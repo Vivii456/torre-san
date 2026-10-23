@@ -39,9 +39,9 @@ public class TorreSan extends ApplicationAdapter {
 	    		new Texture(Gdx.files.internal("plataforma_movil.png")),
 	    		sonidoPiso);
          
-	    musica = Gdx.audio.newMusic(Gdx.files.internal("rain.mp3"));
+	    musica = Gdx.audio.newMusic(Gdx.files.internal("musica.mp3"));
 	    musica.setLooping(true);
-	    musica.setVolume(0.4f);
+	    musica.setVolume(0.1f);
 	    musica.play();
 	      
 	    camera = new OrthographicCamera();
