@@ -1,7 +1,5 @@
 package com.mygdx.game;
 
-import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
@@ -18,15 +16,9 @@ public class ObjetosTorre {
 	private static final float INTERVALO_PINCHO_MAX = 3f;
 	
 	private final Array<Interactuable> objetos = new Array<Interactuable>();
-	private final Texture imagenEstrella;
-	private final Texture imagenPincho;
-	private final Sound sonidoEstrella;
 	private float tiempoProximoPincho;
 	
-	public ObjetosTorre(Texture iEstrella, Texture iPincho, Sound sEstrella) {
-		this.imagenEstrella = iEstrella;
-		this.imagenPincho = iPincho;
-		this.sonidoEstrella = sEstrella;
+	public ObjetosTorre() {
 	}
 	
 	public void reiniciar() {
@@ -37,7 +29,7 @@ public class ObjetosTorre {
 	//Plataformas avisa cada vez que se crea una plataforma y a veces se le pone una estrella
 	public void alCrearPlataforma(Plataforma p) {
 		if (p.getPiso() >= PISO_INICIO && MathUtils.random() < PROBABILIDAD_ESTRELLA) {
-			objetos.add(new Estrella(p, imagenEstrella, sonidoEstrella));
+			objetos.add(new Estrella(p, GestorRecursos.getInstancia().getTextura(GestorRecursos.ESTRELLA)));
 		}
 	}
 	
@@ -67,7 +59,7 @@ public class ObjetosTorre {
 		tiempoProximoPincho -= delta;
 		if (tiempoProximoPincho <= 0) {
 			float x = MathUtils.random(0, TorreSan.ANCHO - Pincho.ANCHO);
-			objetos.add(new Pincho(x, bordeSuperior, imagenPincho));
+			objetos.add(new Pincho(x, bordeSuperior, GestorRecursos.getInstancia().getTextura(GestorRecursos.PINCHO)));
 			tiempoProximoPincho = MathUtils.random(INTERVALO_PINCHO_MIN, INTERVALO_PINCHO_MAX);
 		}
 	}
@@ -76,11 +68,5 @@ public class ObjetosTorre {
 		for (Interactuable objeto : objetos) {
 			objeto.dibujar(batch);
 		}
-	}
-	
-	public void destruir() {
-		imagenEstrella.dispose();
-		imagenPincho.dispose();
-		sonidoEstrella.dispose();
 	}
 }

@@ -1,7 +1,5 @@
 package com.mygdx.game;
 
-import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 
@@ -21,8 +19,6 @@ public class Jugador {
 	private static final int PUNTOS_POR_PISO = 10;
 	
 	private final Rectangle area = new Rectangle(0, 0, TAMANO, TAMANO);
-	private final Texture imagen;
-	private final Sound sonidoHerido;
 	
 	private float velocidadY;
 	private float yAnterior;
@@ -32,9 +28,7 @@ public class Jugador {
 	private int pisoMaximo;
 	private float tiempoInvulnerable;
 	
-	public Jugador(Texture imagen, Sound sonidoHerido) {
-		this.imagen = imagen;
-		this.sonidoHerido = sonidoHerido;
+	public Jugador() {
 	}
 	
 	public void reiniciar() {
@@ -108,20 +102,15 @@ public class Jugador {
 			vidas--;
 		}
 		tiempoInvulnerable = TIEMPO_INVULNERABLE;
-		sonidoHerido.play();
+		GestorRecursos.getInstancia().reproducir(GestorRecursos.SONIDO_HERIDO);
 	}
 	
 	public void dibujar(SpriteBatch batch) {
 		//parpadea un momento al perder una vida
 		boolean oculto = tiempoInvulnerable > 0 && ((int) (tiempoInvulnerable * 10)) % 2 == 0;
 		if (!oculto) {
-			batch.draw(imagen, area.x, area.y, TAMANO, TAMANO);
+			batch.draw(GestorRecursos.getInstancia().getTextura(GestorRecursos.JUGADOR), area.x, area.y, TAMANO, TAMANO);
 		}
-	}
-	
-	public void destruir() {
-		imagen.dispose();
-		sonidoHerido.dispose();
 	}
 	
 	public boolean colisionaCon(Rectangle otro) {

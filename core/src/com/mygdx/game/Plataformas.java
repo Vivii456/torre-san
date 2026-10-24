@@ -1,7 +1,5 @@
 package com.mygdx.game;
 
-import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
@@ -27,21 +25,12 @@ public class Plataformas {
 	private static final float VELOCIDAD_MOVIL_MAX = 120f;
 	
 	private final Array<Plataforma> plataformas = new Array<Plataforma>();
-	private final Texture imagenNormal;
-	private final Texture imagenQuebradiza;
-	private final Texture imagenMovil;
 	private Plataforma plataformaPisada;
-	private final Sound sonidoPiso;
 	private final ObjetosTorre objetos;
 	private int siguientePiso;
 	private float centroAnterior;
 	   
-	public Plataformas(Texture iNormal, Texture iQueb, Texture iMovil, 
-			Sound sonidoPiso, ObjetosTorre obj) {
-		this.imagenNormal = iNormal;
-		this.imagenQuebradiza = iQueb;
-		this.imagenMovil = iMovil;
-		this.sonidoPiso = sonidoPiso;
+	public Plataformas(ObjetosTorre obj) {
 		this.objetos= obj;
 	}
 	
@@ -72,20 +61,21 @@ public class Plataformas {
 	
 	//Elige al azar el tipo de plataforma. Los primeros pisos son normales
 	private Plataforma crearPlataformaSegunPiso(float x, float y, int piso) {
+		GestorRecursos recursos = GestorRecursos.getInstancia();
 		if (piso >= PISO_INICIO_ESPECIALES) {
 			float azar = MathUtils.random();
 			if (azar < PROBABILIDAD_QUEBRADIZA) {
-				return new PlataformaQuebradiza(x, y, piso, imagenQuebradiza);
+				return new PlataformaQuebradiza(x, y, piso, recursos.getTextura(GestorRecursos.PLATAFORMA_QUEBRADIZA));
 			}
 			if (azar < PROBABILIDAD_QUEBRADIZA + PROBABILIDAD_MOVIL) {
 				float velocidad = MathUtils.random(VELOCIDAD_MOVIL_MIN, VELOCIDAD_MOVIL_MAX);
 				if (MathUtils.randomBoolean()) {
 					velocidad = -velocidad;
 				}
-				return new PlataformaMovil(x, y, piso, imagenMovil, velocidad);
+				return new PlataformaMovil(x, y, piso, recursos.getTextura(GestorRecursos.PLATAFORMA_MOVIL), velocidad);
 			}
 		}
-		return new PlataformaNormal(x, y, piso, imagenNormal);
+		return new PlataformaNormal(x, y, piso, recursos.getTextura(GestorRecursos.PLATAFORMA_NORMAL));
 	}
 	
 	//Actualiza cada plataforma según su tipo. Si el jugador estaba parado sobre una plataforma
@@ -129,7 +119,7 @@ public class Plataformas {
 					p.alSerPisada();
 				}
 				if (jugador.registrarPiso(p.getPiso())) {
-					sonidoPiso.play(0.5f);
+					GestorRecursos.getInstancia().reproducir(GestorRecursos.SONIDO_PUNTO, 0.5f);;
 				}
 				return;
 			}
@@ -167,13 +157,6 @@ public class Plataformas {
 		for (Plataforma p : plataformas) {
 			p.dibujar(batch);
 		}
-	}
-	
-	public void destruir() {
-		imagenNormal.dispose();
-		imagenQuebradiza.dispose();
-		imagenMovil.dispose();
-		sonidoPiso.dispose();
 	}
 	
 	private static float yDePiso(int piso) {

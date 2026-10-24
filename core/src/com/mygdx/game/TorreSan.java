@@ -3,10 +3,7 @@ package com.mygdx.game;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -20,7 +17,6 @@ public class TorreSan extends ApplicationAdapter {
 	private OrthographicCamera camera;
 	private SpriteBatch batch;	   
 	private BitmapFont font;
-	private Music musica;
 	   
 	private Jugador jugador;
 	private Plataformas plataformas;
@@ -29,25 +25,13 @@ public class TorreSan extends ApplicationAdapter {
 	@Override
 	public void create () {
 		font = new BitmapFont();
-		 
-		Sound sonidoHerido = Gdx.audio.newSound(Gdx.files.internal("hurt.ogg"));
-		jugador = new Jugador(new Texture(Gdx.files.internal("jugador.png")), sonidoHerido);
-          
-	    Sound sonidoPiso = Gdx.audio.newSound(Gdx.files.internal("drop.wav"));
-	    objetos = new ObjetosTorre(
-	    		new Texture(Gdx.files.internal("estrella.png")),
-	    		new Texture(Gdx.files.internal("pincho.png")),
-	    		Gdx.audio.newSound(Gdx.files.internal("drop.wav")));
-	    plataformas = new Plataformas(
-	    		new Texture(Gdx.files.internal("plataforma.png")),
-	    		new Texture(Gdx.files.internal("plataforma_quebradiza.png")),
-	    		new Texture(Gdx.files.internal("plataforma_movil.png")),
-	    		sonidoPiso, objetos);
-         
-	    musica = Gdx.audio.newMusic(Gdx.files.internal("musica.mp3"));
-	    musica.setLooping(true);
-	    musica.setVolume(0.1f);
-	    musica.play();
+		
+		GestorRecursos.getInstancia().cargar();
+		GestorRecursos.getInstancia().reproducirMusica();
+		
+		jugador = new Jugador();
+		objetos = new ObjetosTorre();
+		plataformas = new Plataformas(objetos);
 	      
 	    camera = new OrthographicCamera();
 	    camera.setToOrtho(false, ANCHO, ALTO);
@@ -132,10 +116,7 @@ public class TorreSan extends ApplicationAdapter {
 	
 	@Override
 	public void dispose () {
-	      jugador.destruir();
-          plataformas.destruir();
-          objetos.destruir();
-          musica.dispose();
+	      GestorRecursos.getInstancia().liberar();
 	      batch.dispose();
 	      font.dispose();
 	}

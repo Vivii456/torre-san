@@ -1,6 +1,5 @@
 package com.mygdx.game;
 
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
@@ -14,16 +13,14 @@ public class Estrella implements Interactuable {
 	
 	private final Plataforma base;
 	private final Texture imagen;
-	private final Sound sonido;
 	private final Rectangle area = new Rectangle(0, 0, TAMANO, TAMANO);
 	private float tiempo;
 	private boolean activa = true;
 	
 	//La estrella sigue a su plataforma asi que se mueve si su plataforma es móvil
-	public Estrella(Plataforma b, Texture i, Sound s) {
+	public Estrella(Plataforma b, Texture i) {
 		this.base = b;
 		this.imagen = i;
-		this.sonido = s;
 		actualizarPosicion();
 	}
 	
@@ -54,7 +51,7 @@ public class Estrella implements Interactuable {
 	@Override
 	public void alTocarJugador(Jugador jugador) {
 		jugador.impulsar();
-		sonido.play();
+		GestorRecursos.getInstancia().reproducir(GestorRecursos.SONIDO_PUNTO);
 		activa = false;
 	}
 	
