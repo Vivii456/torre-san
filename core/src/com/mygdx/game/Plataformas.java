@@ -32,14 +32,17 @@ public class Plataformas {
 	private final Texture imagenMovil;
 	private Plataforma plataformaPisada;
 	private final Sound sonidoPiso;
+	private final ObjetosTorre objetos;
 	private int siguientePiso;
 	private float centroAnterior;
 	   
-	public Plataformas(Texture iNormal, Texture iQueb, Texture iMovil, Sound sonidoPiso) {
+	public Plataformas(Texture iNormal, Texture iQueb, Texture iMovil, 
+			Sound sonidoPiso, ObjetosTorre obj) {
 		this.imagenNormal = iNormal;
 		this.imagenQuebradiza = iQueb;
 		this.imagenMovil = iMovil;
 		this.sonidoPiso = sonidoPiso;
+		this.objetos= obj;
 	}
 	
 	public void crear() {
@@ -61,7 +64,10 @@ public class Plataformas {
 			x = MathUtils.random(minimo, maximo);
 		}
 		centroAnterior = x + Plataforma.ANCHO / 2f;
-		plataformas.add(crearPlataformaSegunPiso(x, yDePiso(piso), piso));
+		Plataforma nueva = crearPlataformaSegunPiso(x, yDePiso(piso), piso);
+		plataformas.add(nueva);
+		objetos.alCrearPlataforma(nueva);
+		
 	}
 	
 	//Elige al azar el tipo de plataforma. Los primeros pisos son normales
@@ -141,8 +147,7 @@ public class Plataformas {
 			boolean visible = p.getY() > bordeInferior + ESPACIADO_VERTICAL / 2
 					&& p.getY() < bordeInferior + TorreSan.ALTO - 60;
 			// Se evita reaparecer sobre una quebradiza o una movil
-			boolean estable = p instanceof PlataformaNormal;
-			if (visible && estable && (elegida == null
+			if (visible && p.esSegura() && (elegida == null
 					|| Math.abs(p.getY() - alturaIdeal) < Math.abs(elegida.getY() - alturaIdeal))) {
 				elegida = p;
 			}

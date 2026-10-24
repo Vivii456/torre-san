@@ -15,6 +15,7 @@ public class Jugador {
 	private static final float VELOCIDAD_X = 300f;
 	private static final float GRAVEDAD = -1200f;
 	private static final float VELOCIDAD_SALTO = 620f;
+	private static final float VELOCIDAD_IMPULSO = 900f;
 	private static final float VELOCIDAD_CAIDA_MAX = -900f;
 	private static final float TIEMPO_INVULNERABLE = 1.5f;
 	private static final int PUNTOS_POR_PISO = 10;
@@ -74,10 +75,17 @@ public class Jugador {
 		enSuelo = false;
 	}
 
+	//Desplaza al jugador horizontalmente y lo usa una plataforma movil
 	public void moverHorizontal(float dx) {
 		area.x += dx;
 		if (area.x < 0) area.x = 0;
 		if (area.x > TorreSan.ANCHO - TAMANO) area.x = TorreSan.ANCHO - TAMANO;
+	}
+	
+	//Impulso al tomar una estrella (sirve en el aire)
+	public void impulsar() {
+		velocidadY = VELOCIDAD_IMPULSO;
+		enSuelo = false;
 	}
 	
 	public void aterrizar(float ySuperficie) {
@@ -114,6 +122,14 @@ public class Jugador {
 	public void destruir() {
 		imagen.dispose();
 		sonidoHerido.dispose();
+	}
+	
+	public boolean colisionaCon(Rectangle otro) {
+		return area.overlaps(otro);
+	}
+	
+	public boolean esInvulnerable() {
+		return tiempoInvulnerable > 0;
 	}
 	
 	public float getX() {

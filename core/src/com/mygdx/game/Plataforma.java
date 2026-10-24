@@ -37,6 +37,11 @@ public abstract class Plataforma {
 		return true;
 	}
 	
+	//Indica si es un buen lugar para reaparecer tras perder 1 vida
+	public boolean esSegura() {
+		return true;
+	}
+	
 	// Cuánto se movió en el último cuadro (solo la plataforma móvil se mueve)
 	public float getDesplazamientoX() {
 		return 0;

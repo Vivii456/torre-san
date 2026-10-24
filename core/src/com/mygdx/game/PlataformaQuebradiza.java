@@ -40,4 +40,9 @@ public class PlataformaQuebradiza extends Plataforma {
 	protected float getTemblor() {
 		return pisada ? MathUtils.random(-INTENSIDAD_TEMBLOR, INTENSIDAD_TEMBLOR) : 0;
 	}
+	
+	@Override
+	public boolean esSegura() {
+		return false;
+	}
 }

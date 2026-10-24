@@ -44,4 +44,9 @@ public class PlataformaMovil extends Plataforma {
 	public float getDesplazamientoX() {
 		return ultimoDesplazamiento;
 	}
+	
+	@Override
+	public boolean esSegura() {
+		return false;
+	}
 }

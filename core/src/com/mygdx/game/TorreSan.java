@@ -24,6 +24,7 @@ public class TorreSan extends ApplicationAdapter {
 	   
 	private Jugador jugador;
 	private Plataformas plataformas;
+	private ObjetosTorre objetos;
 	
 	@Override
 	public void create () {
@@ -33,11 +34,15 @@ public class TorreSan extends ApplicationAdapter {
 		jugador = new Jugador(new Texture(Gdx.files.internal("jugador.png")), sonidoHerido);
           
 	    Sound sonidoPiso = Gdx.audio.newSound(Gdx.files.internal("drop.wav"));
+	    objetos = new ObjetosTorre(
+	    		new Texture(Gdx.files.internal("estrella.png")),
+	    		new Texture(Gdx.files.internal("pincho.png")),
+	    		Gdx.audio.newSound(Gdx.files.internal("drop.wav")));
 	    plataformas = new Plataformas(
 	    		new Texture(Gdx.files.internal("plataforma.png")),
 	    		new Texture(Gdx.files.internal("plataforma_quebradiza.png")),
 	    		new Texture(Gdx.files.internal("plataforma_movil.png")),
-	    		sonidoPiso);
+	    		sonidoPiso, objetos);
          
 	    musica = Gdx.audio.newMusic(Gdx.files.internal("musica.mp3"));
 	    musica.setLooping(true);
@@ -53,6 +58,7 @@ public class TorreSan extends ApplicationAdapter {
 	
 	private void reiniciar() {
 		camera.position.y = ALTO / 2f;
+		objetos.reiniciar();
 		plataformas.crear();
 		jugador.reiniciar();
 		plataformas.colocarJugadorAlInicio(jugador);
@@ -67,6 +73,7 @@ public class TorreSan extends ApplicationAdapter {
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
 		plataformas.dibujar(batch);
+		objetos.dibujar(batch);
 		jugador.dibujar(batch);
 		
 		//Los textos se dibujan relativos a la cámara para que queden fijos en pantalla
@@ -109,8 +116,12 @@ public class TorreSan extends ApplicationAdapter {
 		
 		float bordeInferior = camera.position.y - ALTO / 2f;
 		plataformas.generarYLimpiar(bordeInferior, bordeInferior + ALTO);
+		objetos.actualizar(delta, jugador, bordeInferior, bordeInferior + ALTO);
+		if (!jugador.estaVivo()) {
+			return;
+		}
 		
-		//cayó por debajo de la pantalla: pierde una vida y reaparece en una plataforma visible
+		//si el jugador cae por debajo de la pantalla pierde una vida y reaparece en una plataforma visible
 		if (jugador.getY() + Jugador.TAMANO < bordeInferior) {
 			jugador.perderVida();
 			if (jugador.estaVivo()) {
@@ -123,6 +134,7 @@ public class TorreSan extends ApplicationAdapter {
 	public void dispose () {
 	      jugador.destruir();
           plataformas.destruir();
+          objetos.destruir();
           musica.dispose();
 	      batch.dispose();
 	      font.dispose();
