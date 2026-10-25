@@ -21,6 +21,7 @@ public class ObjetosTorre {
 	
 	private final Array<Interactuable> objetos = new Array<Interactuable>();
 	private float tiempoProximoPincho;
+	private boolean pinchosActivos = true; //controlado por el Builder
 	
 	public ObjetosTorre() {
 	}
@@ -28,6 +29,10 @@ public class ObjetosTorre {
 	public void reiniciar() {
 		objetos.clear();
 		tiempoProximoPincho = MathUtils.random(INTERVALO_PINCHO_MIN, INTERVALO_PINCHO_MAX);
+	}
+	
+	public void setPinchosActivos(boolean activos) {
+		this.pinchosActivos = activos;
 	}
 	
 	//Plataformas avisa cada vez que se crea una plataforma y a veces se le pone una estrella
@@ -56,7 +61,7 @@ public class ObjetosTorre {
 	}
 	
 	private void generarPinchos(float delta, Jugador jugador, float bordeSuperior) {
-		if (jugador.getPisoMaximo() < PISO_INICIO) {
+		if (!pinchosActivos || jugador.getPisoMaximo() < PISO_INICIO) {
 			return;
 		}
 		

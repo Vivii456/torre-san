@@ -34,7 +34,11 @@ public class Jugador {
 	}
 	
 	public void reiniciar() {
-		vidas = VIDAS_INICIALES;
+		reiniciar(VIDAS_INICIALES);
+	}
+	
+	public void reiniciar(int vidasIniciales) {
+		vidas = Math.max(1, vidasIniciales);
 		puntos = 0;
 		pisoMaximo = 0;
 		tiempoInvulnerable = 0;

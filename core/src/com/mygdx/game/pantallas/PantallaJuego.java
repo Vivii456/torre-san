@@ -6,6 +6,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mygdx.game.TorreSan;
 import com.mygdx.game.jugador.Jugador;
 import com.mygdx.game.objetos.ObjetosTorre;
+import com.mygdx.game.partida.DirectorPartida;
+import com.mygdx.game.partida.ModoJuego;
+import com.mygdx.game.partida.Partida;
+import com.mygdx.game.partida.PartidaEstandarBuilder;
 import com.mygdx.game.plataformas.Plataformas;
 
 /*
@@ -14,20 +18,20 @@ import com.mygdx.game.plataformas.Plataformas;
  */
 
 public class PantallaJuego extends PantallaBase {
+	private final ModoJuego modo;
 	private final Jugador jugador;
 	private final Plataformas plataformas;
 	private final ObjetosTorre objetos;
 	
-	public PantallaJuego(TorreSan juego) {
+	public PantallaJuego(TorreSan juego, ModoJuego modo) {
 		super(juego);
-		jugador = new Jugador();
-		objetos = new ObjetosTorre();
-		plataformas = new Plataformas(objetos);
+		this.modo = modo;
 		
-		objetos.reiniciar();
-		plataformas.crear();
-		jugador.reiniciar();
-		plataformas.colocarJugadorAlInicio(jugador);
+		DirectorPartida director = new DirectorPartida(new PartidaEstandarBuilder());
+		Partida partida = director.construir(modo);
+		jugador = partida.getJugador();
+		plataformas = partida.getPlataformas();
+		objetos = partida.getObjetos();
 	}
 	
 	@Override
@@ -66,7 +70,7 @@ public class PantallaJuego extends PantallaBase {
 		}
 		
 		if (!jugador.estaVivo()) {
-			cambiarA(new PantallaFinJuego(juego, jugador.getPisoMaximo(), jugador.getPuntos()));
+			cambiarA(new PantallaFinJuego(juego, jugador.getPisoMaximo(), jugador.getPuntos(), modo));
 		}
 	}
 	
@@ -80,5 +84,9 @@ public class PantallaJuego extends PantallaBase {
 		juego.getFuente().draw(batch, "Piso: " + jugador.getPisoMaximo(), 5,  arriba - 5);
 		juego.getFuente().draw(batch, "Puntos: " + jugador.getPuntos(), 5, arriba - 25);
 		juego.getFuente().draw(batch, "Vidas: " + jugador.getVidas(), TorreSan.ANCHO - 80, arriba - 5);
+		
+		if (modo == ModoJuego.PRACTICA) {
+			juego.getFuente().draw(batch, "MODO PRÁCTICA", TorreSan.ANCHO - 120, arriba - 25);
+		}
 	}
 }

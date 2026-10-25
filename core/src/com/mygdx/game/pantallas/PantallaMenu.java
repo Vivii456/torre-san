@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.mygdx.game.TorreSan;
+import com.mygdx.game.partida.ModoJuego;
 import com.mygdx.game.recursos.GestorRecursos;
 
 //Pantalla de inicio con el título, controles y opción de empezar a jugar
@@ -20,7 +21,10 @@ public class PantallaMenu extends PantallaBase {
 	@Override
 	protected void procesarEntrada() {
 		if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-			cambiarA(new PantallaJuego(juego));
+			cambiarA(new PantallaJuego(juego, ModoJuego.NORMAL));
+		}
+		if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
+			cambiarA(new PantallaJuego(juego, ModoJuego.PRACTICA));
 		}
 		if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
 			Gdx.app.exit();
@@ -42,6 +46,6 @@ public class PantallaMenu extends PantallaBase {
 		dibujarTextoCentrado(batch, juego.getFuente(), "Sube la torre saltando de plataforma en plataforma", 200);
 		dibujarTextoCentrado(batch, juego.getFuente(), "Flechas: moverse     Espacio o flecha arriba: saltar", 160);
 		dibujarTextoCentrado(batch, juego.getFuente(), "Toma las estrellas para impulsarte y esquiva los pinchos", 135);
-		dibujarTextoCentrado(batch, juego.getFuente(), "ENTER: jugar    ESC: salir", 80);
+		dibujarTextoCentrado(batch, juego.getFuente(), "ENTER: jugar     P: modo práctica (sin pinchos)     ESC: salir", 80);
 	}
 }
