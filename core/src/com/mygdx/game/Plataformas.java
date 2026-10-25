@@ -51,7 +51,7 @@ public class Plataformas {
 		if(plataformasSuperadas >= 10) {
 			contextoGeneracion.setEstrategia(new GeneracionNormal());
 		}
-		if (plataformasSuperadas >= 20) {
+		else if (plataformasSuperadas >= 20) {
 			contextoGeneracion.setEstrategia(new GeneracionDificil());
 		}
 		else {
