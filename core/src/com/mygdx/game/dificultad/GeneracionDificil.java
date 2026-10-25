@@ -1,6 +1,11 @@
-package com.mygdx.game;
+package com.mygdx.game.dificultad;
 
 import com.badlogic.gdx.math.MathUtils;
+import com.mygdx.game.plataformas.Plataforma;
+import com.mygdx.game.plataformas.PlataformaMovil;
+import com.mygdx.game.plataformas.PlataformaNormal;
+import com.mygdx.game.plataformas.PlataformaQuebradiza;
+import com.mygdx.game.recursos.GestorRecursos;
 
 public class GeneracionDificil implements EstrategiaGeneracion {
 	

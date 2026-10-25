@@ -1,6 +1,7 @@
-package com.mygdx.game;
+package com.mygdx.game.plataformas;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.mygdx.game.TorreSan;
 
 //Plataforma que va y viene horizontalmente. Si el jugador está parado sobre ella,
 //se mueve junto con la plataforma

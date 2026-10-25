@@ -1,9 +1,11 @@
-package com.mygdx.game;
+package com.mygdx.game.pantallas;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
+import com.mygdx.game.TorreSan;
+import com.mygdx.game.recursos.GestorRecursos;
 
 //Pantalla de inicio con el título, controles y opción de empezar a jugar
 

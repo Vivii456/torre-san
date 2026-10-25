@@ -1,4 +1,6 @@
-package com.mygdx.game;
+package com.mygdx.game.dificultad;
+
+import com.mygdx.game.plataformas.Plataforma;
 
 public interface EstrategiaGeneracion {
 	

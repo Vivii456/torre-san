@@ -1,7 +1,9 @@
-package com.mygdx.game;
+package com.mygdx.game.jugador;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
+import com.mygdx.game.TorreSan;
+import com.mygdx.game.recursos.GestorRecursos;
 
 /*
  * Objeto que controla al jugador, anteriormente Tarro

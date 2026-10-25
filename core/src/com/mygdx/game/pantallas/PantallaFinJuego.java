@@ -1,8 +1,9 @@
-package com.mygdx.game;
+package com.mygdx.game.pantallas;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.mygdx.game.TorreSan;
 
 //Pantalla que aparece al perder todas las vidas y muestra el resultado de la partida
 

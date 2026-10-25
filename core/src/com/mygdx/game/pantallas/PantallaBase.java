@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package com.mygdx.game.pantallas;
 
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.mygdx.game.TorreSan;
 
 /*
  * Se implementa el patrón Template Method con una clase abstracta que es padre de

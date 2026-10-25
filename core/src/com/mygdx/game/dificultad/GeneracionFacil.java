@@ -1,4 +1,8 @@
-package com.mygdx.game;
+package com.mygdx.game.dificultad;
+
+import com.mygdx.game.plataformas.Plataforma;
+import com.mygdx.game.plataformas.PlataformaNormal;
+import com.mygdx.game.recursos.GestorRecursos;
 
 public class GeneracionFacil implements EstrategiaGeneracion {
 

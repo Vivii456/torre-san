@@ -1,8 +1,16 @@
-package com.mygdx.game;
+package com.mygdx.game.plataformas;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
+import com.mygdx.game.TorreSan;
+import com.mygdx.game.dificultad.ContextoGeneracion;
+import com.mygdx.game.dificultad.GeneracionDificil;
+import com.mygdx.game.dificultad.GeneracionFacil;
+import com.mygdx.game.dificultad.GeneracionNormal;
+import com.mygdx.game.jugador.Jugador;
+import com.mygdx.game.objetos.ObjetosTorre;
+import com.mygdx.game.recursos.GestorRecursos;
 
 /*
  * Administra las plataformas de la torre.

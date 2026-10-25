@@ -4,6 +4,8 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.mygdx.game.pantallas.PantallaMenu;
+import com.mygdx.game.recursos.GestorRecursos;
 
 /* Clase principal del juego, anteriormente GameLluvia
  * Carga los recursos, guarda los objetos de dibujo que comparten las pantallas y

@@ -1,9 +1,10 @@
-package com.mygdx.game;
+package com.mygdx.game.objetos;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
+import com.mygdx.game.jugador.Jugador;
 
 public class Pincho implements Interactuable {
 	public static final int ANCHO = 24;

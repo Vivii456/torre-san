@@ -1,6 +1,7 @@
-package com.mygdx.game;
+package com.mygdx.game.objetos;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.mygdx.game.jugador.Jugador;
 
 /*
  * Interfaz para los objetos de la torre con los que el jugador interactúa

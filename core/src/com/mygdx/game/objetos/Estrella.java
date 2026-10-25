@@ -1,9 +1,12 @@
-package com.mygdx.game;
+package com.mygdx.game.objetos;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
+import com.mygdx.game.jugador.Jugador;
+import com.mygdx.game.plataformas.Plataforma;
+import com.mygdx.game.recursos.GestorRecursos;
 
 public class Estrella implements Interactuable {
 	public static final int TAMANO = 24;

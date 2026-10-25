@@ -1,8 +1,12 @@
-package com.mygdx.game;
+package com.mygdx.game.pantallas;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.mygdx.game.TorreSan;
+import com.mygdx.game.jugador.Jugador;
+import com.mygdx.game.objetos.ObjetosTorre;
+import com.mygdx.game.plataformas.Plataformas;
 
 /*
  * Pantalla de la partida, contiene la lógica de TorreSan: lee el teclado, actualiza al jugador,
