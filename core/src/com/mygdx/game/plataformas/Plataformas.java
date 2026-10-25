@@ -56,11 +56,11 @@ public class Plataformas {
 	}
 	
 	private void actualizarDificultad() {
-		if(plataformasSuperadas >= 10) {
-			contextoGeneracion.setEstrategia(new GeneracionNormal());
-		}
-		else if (plataformasSuperadas >= 20) {
+		if(plataformasSuperadas >= 20) {
 			contextoGeneracion.setEstrategia(new GeneracionDificil());
+		}
+		else if (plataformasSuperadas >= 10) {
+			contextoGeneracion.setEstrategia(new GeneracionNormal());
 		}
 		else {
 			contextoGeneracion.setEstrategia(new GeneracionFacil());
