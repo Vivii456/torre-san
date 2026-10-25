@@ -18,20 +18,23 @@ public class Plataformas {
 	private static final float DISTANCIA_HORIZONTAL_MAX = 220f;
 	
 	//Desde este piso empiezan a aparecer plataformas especiales
-	private static final int PISO_INICIO_ESPECIALES = 5;
-	private static final float PROBABILIDAD_QUEBRADIZA = 0.2f;
-	private static final float PROBABILIDAD_MOVIL = 0.2f;
-	private static final float VELOCIDAD_MOVIL_MIN = 60f;
-	private static final float VELOCIDAD_MOVIL_MAX = 120f;
-	
+
 	private final Array<Plataforma> plataformas = new Array<Plataforma>();
 	private Plataforma plataformaPisada;
 	private final ObjetosTorre objetos;
 	private int siguientePiso;
 	private float centroAnterior;
+	private int plataformasSuperadas;
+	
+	//Se agrega la logica del contexto para manejar el strategy.
+	private final ContextoGeneracion contextoGeneracion;
+	
 	   
 	public Plataformas(ObjetosTorre obj) {
 		this.objetos= obj;
+		
+		//se agrega la inicializacion del contexto
+		this.contextoGeneracion = new ContextoGeneracion( new GeneracionFacil());
 	}
 	
 	public void crear() {
@@ -39,7 +42,21 @@ public class Plataformas {
 		plataformaPisada = null;
 		siguientePiso = 0;
 		centroAnterior = TorreSan.ANCHO / 2f;
+		plataformasSuperadas = 0;
+		contextoGeneracion.setEstrategia(new GeneracionFacil());
 		generarYLimpiar(0, TorreSan.ALTO);
+	}
+	
+	private void actualizarDificultad() {
+		if(plataformasSuperadas >= 10) {
+			contextoGeneracion.setEstrategia(new GeneracionNormal());
+		}
+		if (plataformasSuperadas >= 20) {
+			contextoGeneracion.setEstrategia(new GeneracionDificil());
+		}
+		else {
+			contextoGeneracion.setEstrategia(new GeneracionFacil());
+		}
 	}
 	
 	private void crearPlataforma() {
@@ -53,31 +70,14 @@ public class Plataformas {
 			x = MathUtils.random(minimo, maximo);
 		}
 		centroAnterior = x + Plataforma.ANCHO / 2f;
-		Plataforma nueva = crearPlataformaSegunPiso(x, yDePiso(piso), piso);
+		//Se utiliza el contexto para generar la nueva plataforma
+		Plataforma nueva = contextoGeneracion.generarPlataforma(x, yDePiso(piso), piso);
 		plataformas.add(nueva);
 		objetos.alCrearPlataforma(nueva);
 		
 	}
 	
-	//Elige al azar el tipo de plataforma. Los primeros pisos son normales
-	private Plataforma crearPlataformaSegunPiso(float x, float y, int piso) {
-		GestorRecursos recursos = GestorRecursos.getInstancia();
-		if (piso >= PISO_INICIO_ESPECIALES) {
-			float azar = MathUtils.random();
-			if (azar < PROBABILIDAD_QUEBRADIZA) {
-				return new PlataformaQuebradiza(x, y, piso, recursos.getTextura(GestorRecursos.PLATAFORMA_QUEBRADIZA));
-			}
-			if (azar < PROBABILIDAD_QUEBRADIZA + PROBABILIDAD_MOVIL) {
-				float velocidad = MathUtils.random(VELOCIDAD_MOVIL_MIN, VELOCIDAD_MOVIL_MAX);
-				if (MathUtils.randomBoolean()) {
-					velocidad = -velocidad;
-				}
-				return new PlataformaMovil(x, y, piso, recursos.getTextura(GestorRecursos.PLATAFORMA_MOVIL), velocidad);
-			}
-		}
-		return new PlataformaNormal(x, y, piso, recursos.getTextura(GestorRecursos.PLATAFORMA_NORMAL));
-	}
-	
+
 	//Actualiza cada plataforma según su tipo. Si el jugador estaba parado sobre una plataforma
 	//móvil, lo mueve junto a ella
 	public void actualizarPlataformas(float delta, Jugador jugador) {
@@ -119,7 +119,11 @@ public class Plataformas {
 					p.alSerPisada();
 				}
 				if (jugador.registrarPiso(p.getPiso())) {
+					//Se aumenta el contador y se actualiza la dificultad dinamicamente usando strategy.
+					plataformasSuperadas++;
+					actualizarDificultad();
 					GestorRecursos.getInstancia().reproducir(GestorRecursos.SONIDO_PUNTO, 0.5f);;
+					
 				}
 				return;
 			}
