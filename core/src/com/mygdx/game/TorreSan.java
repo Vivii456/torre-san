@@ -1,124 +1,62 @@
 package com.mygdx.game;
 
-import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.Game;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.ScreenUtils;
 
 /* Clase principal del juego, anteriormente GameLluvia
+ * Carga los recursos, guarda los objetos de dibujo que comparten las pantallas y
+ * muestra el menú al iniciar el juego
  */
-public class TorreSan extends ApplicationAdapter {
+public class TorreSan extends Game {
 	public static final int ANCHO = 800;
 	public static final int ALTO = 480;
+	private static final float ESCALA_FUENTE_GRANDE = 3f;
 	
-	private OrthographicCamera camera;
 	private SpriteBatch batch;	   
-	private BitmapFont font;
-	   
-	private Jugador jugador;
-	private Plataformas plataformas;
-	private ObjetosTorre objetos;
+	private BitmapFont fuente;
+	private BitmapFont fuenteGrande;
 	
 	@Override
 	public void create () {
-		font = new BitmapFont();
+		batch = new SpriteBatch();
+		fuente = new BitmapFont();
+		fuenteGrande = new BitmapFont();
+		fuenteGrande.getData().setScale(ESCALA_FUENTE_GRANDE);
+		//se suavizan las letras al agrandarlas
+		fuenteGrande.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 		
+		//Singleton
 		GestorRecursos.getInstancia().cargar();
 		GestorRecursos.getInstancia().reproducirMusica();
 		
-		jugador = new Jugador();
-		objetos = new ObjetosTorre();
-		plataformas = new Plataformas(objetos);
-	      
-	    camera = new OrthographicCamera();
-	    camera.setToOrtho(false, ANCHO, ALTO);
-	    batch = new SpriteBatch();
-	      
-	    reiniciar();
+		setScreen(new PantallaMenu(this));
 	}
 	
-	private void reiniciar() {
-		camera.position.y = ALTO / 2f;
-		objetos.reiniciar();
-		plataformas.crear();
-		jugador.reiniciar();
-		plataformas.colocarJugadorAlInicio(jugador);
-	}
-
-	@Override
-	public void render () {
-		actualizar(Gdx.graphics.getDeltaTime());
-		
-		ScreenUtils.clear(0, 0, 0.2f, 1);
-		camera.update();
-		batch.setProjectionMatrix(camera.combined);
-		batch.begin();
-		plataformas.dibujar(batch);
-		objetos.dibujar(batch);
-		jugador.dibujar(batch);
-		
-		//Los textos se dibujan relativos a la cámara para que queden fijos en pantalla
-		float arriba = camera.position.y + ALTO / 2f;
-		font.draw(batch, "Piso: " + jugador.getPisoMaximo(), 5, arriba - 5);
-		font.draw(batch, "Puntos: " + jugador.getPuntos(), 5, arriba - 25);
-		font.draw(batch, "Vidas: " + jugador.getVidas(), ANCHO - 80, arriba - 5);
-		
-		if (!jugador.estaVivo()) {
-			font.draw(batch, "GAME OVER - presiona ENTER para reiniciar", ANCHO / 2f - 140, camera.position.y);
-		}
-		batch.end();	
+	//un solo batch para todas las pantallas
+	public SpriteBatch getBatch() {
+		return batch;
 	}
 	
-	private void actualizar(float delta) {
-		//evita saltos bruscos si el juego se congela
-		delta = Math.min(delta, 1/30f);
-		
-		if (!jugador.estaVivo()) {
-			if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-				reiniciar();
-			}
-			return;
-		}
-		
-		boolean izquierda = Gdx.input.isKeyPressed(Input.Keys.LEFT);
-		boolean derecha = Gdx.input.isKeyPressed(Input.Keys.RIGHT);
-		boolean saltar = Gdx.input.isKeyPressed(Input.Keys.SPACE) || Gdx.input.isKeyPressed(Input.Keys.UP);
-		
-		//Primero se mueven las plataformas y luego el jugador
-		plataformas.actualizarPlataformas(delta, jugador);
-		jugador.actualizar(delta, izquierda, derecha, saltar);
-		plataformas.revisarAterrizaje(jugador);
-		
-		//La camara sube cuando el jugador pasa la mitad de la pantalla
-		float centroJugador = jugador.getY() + Jugador.TAMANO / 2f;
-		if (centroJugador > camera.position.y) {
-			camera.position.y = centroJugador;
-		}
-		
-		float bordeInferior = camera.position.y - ALTO / 2f;
-		plataformas.generarYLimpiar(bordeInferior, bordeInferior + ALTO);
-		objetos.actualizar(delta, jugador, bordeInferior, bordeInferior + ALTO);
-		if (!jugador.estaVivo()) {
-			return;
-		}
-		
-		//si el jugador cae por debajo de la pantalla pierde una vida y reaparece en una plataforma visible
-		if (jugador.getY() + Jugador.TAMANO < bordeInferior) {
-			jugador.perderVida();
-			if (jugador.estaVivo()) {
-				plataformas.reubicarJugador(jugador, bordeInferior);
-			}
-		}
+	public BitmapFont getFuente() {
+		return fuente;
+	}
+	
+	public BitmapFont getFuenteGrande() {
+		return fuenteGrande;
 	}
 	
 	@Override
 	public void dispose () {
+	      if (getScreen() != null) {
+	    	  getScreen().dispose();
+	      }
+	      
 	      GestorRecursos.getInstancia().liberar();
 	      batch.dispose();
-	      font.dispose();
+	      fuente.dispose();
+	      fuenteGrande.dispose();
 	}
 }
 

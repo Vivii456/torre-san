@@ -12,7 +12,7 @@ public class GeneracionNormal implements EstrategiaGeneracion {
     private static final float VELOCIDAD_MOVIL_MAX = 100f;
     
 	
-    // Se sobreescribe el metodo generarPlataforma para cambiar la logica según su dificultad.
+    // Se sobreescribe el metodo generarPlataforma para cambiar la logica segÃºn su dificultad.
 	@Override
 	public Plataforma generarPlataforma(float x, float y, int piso) {
 		GestorRecursos recursos = GestorRecursos.getInstancia();
